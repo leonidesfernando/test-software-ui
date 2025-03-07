@@ -10,7 +10,7 @@ import { useEntryStore } from '@/stores'
 const router = useRoute()
 
 const schema = Yup.object().shape({
-  descricao: Yup.string().required('abu'),
+  description: Yup.string().required('abu'),
   entryType: Yup.string().nonNullable().required('Zole'),
   entryDate: Yup.string().required('Date of entry is required'),
   category: Yup.string().required('Category is required')
@@ -57,7 +57,7 @@ entryStore.load(router.params.id)
                                     <tr>
                                       <th v-for="entryType in getEntryTypes" :key="entryType">
                                             <Field name="entryType" :id="entryType.key" type="radio" class="form-check-input" 
-                                                v-model="entry.tipoLancamento"
+                                                v-model="entry.entryType"
                                                 :value="entryType.key" :class="{ 'is-invalid': errors.entryType }" />
                                           <label class="form-check-label" :for="entryType.key">{{ entryType.value }}</label>
                                           <div class="invalid-feedback">{{ errors.entryType }}</div>
@@ -71,10 +71,10 @@ entryStore.load(router.params.id)
                               <div class="col-4 mb-3">
                                   <div class="form-group">
                                       <label class="form-label">{{ $t('description') }}</label>
-                                      <Field type="text" class="form-check-label form-control" id="descricao" name="descricao" 
-                                          :class="{ 'is-invalid': errors.descricao }" v-model="entry.descricao"
+                                      <Field type="text" class="form-check-label form-control" id="description" name="description" 
+                                          :class="{ 'is-invalid': errors.description }" v-model="entry.description"
                                           autofocus="autofocus" :placeholder="$t('provide.description')" maxlength="128"/>
-                                      <div class="invalid-feedback">{{ errors.descricao }}</div>
+                                      <div class="invalid-feedback">{{ errors.description }}</div>
                                   </div>
                               </div>
                           </div>
@@ -82,7 +82,7 @@ entryStore.load(router.params.id)
                               <div class="col-2 mb-3 form-group" >
                                   <label class="form-label">{{ $t('date') }}</label>
                                   <Field name="entryDate" id="entryDate" type="date" :class="{ 'is-invalid': errors.entryDate }" 
-                                    v-model="entry.dataLancamento" class="form-control"/>
+                                    v-model="entry.entryDate" class="form-control"/>
                                   <div class="invalid-feedback">{{ errors.entryDate }}</div>
                               </div>
                           </div>
@@ -90,18 +90,18 @@ entryStore.load(router.params.id)
                               <div class=" col-3 mb-3 form-group" >
                                   <label class="form-label">{{$t('amount')}}</label>
                                     
-                                    <input  name="valor" id="valor" v-model="entry.valor" 
+                                    <input  name="amount" id="amount" v-model="entry.amount" 
                                         class="form-label form-control"
-                                        :class="{ 'is-invalid': errors.valor }"
+                                        :class="{ 'is-invalid': errors.amount }"
                                     />
 
-                                  <div id="amountErrorMessage" class="invalid-feedback">{{ errors.valor }}</div>
+                                  <div id="amountErrorMessage" class="invalid-feedback">{{ errors.amount }}</div>
                               </div>
                           </div>
                           <div class="row">
                               <div class="col-3 mb-3 form-group" >
                                   <label class="form-label">{{ $t('category') }}</label>
-                                  <Field class="form-select" as="select" name="category" id="categoria" v-model="entry.categoria"
+                                  <Field class="form-select" as="select" name="category" id="category" v-model="entry.category"
                                     :class="{ 'is-invalid': errors.category }" >
                                         <option :label="$t('select')" value=""></option>
                                         <option v-for="category in getCategories" :value="category.key" :key="category">{{ category.value }}</option>

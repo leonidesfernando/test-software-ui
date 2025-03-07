@@ -14,11 +14,11 @@ export const useEntryStore = defineStore({
   state: () => ({
       token: localStorage.getItem(TOKEN),
       entry: {"id":"",
-              "categoria": "",
-              "valor": 0,
-              "descricao": "",
-              "dataLancamento": "",
-              "tipoLancamento": "EXPENSE"
+              "category": "",
+              "amount": 0,
+              "description": "",
+              "entryDate": "",
+              "entryType": "EXPENSE"
             }
     }),
     getters:{
@@ -35,7 +35,7 @@ export const useEntryStore = defineStore({
       
       getCategories: () => {
         const messages = i18n.global.messages[i18n.global.locale]
-        const keys = ["food","wage","leisure","phone.internet","loan","investiments","car","clothing","other"]
+        const keys = ["food","wage","leisure","phone.internet","loan","investments","car","clothing","other"]
         const categories = []
         keys.forEach(element => {
           categories.push({'key': element.toUpperCase().replaceAll('.','_'), 'value': messages[element]})
@@ -46,11 +46,11 @@ export const useEntryStore = defineStore({
     actions: {
       init(){
         this.entry = {"id":"",
-                "categoria": "",
-                "valor": 0,
-                "descricao": "",
-                "dataLancamento": "",
-                "tipoLancamento": "EXPENSE"
+                "category": "",
+                "amount": 0,
+                "description": "",
+                "entryDate": "",
+                "entryType": "EXPENSE"
               }
       },
       async add() {
@@ -126,14 +126,15 @@ export const useEntryStore = defineStore({
       if(resp.status == 200){
         this.entry = resp.data
 
-        this.entry.tipoLancamento = this.entry.tipoLancamento.toUpperCase()
-        this.entry.categoria = this.entry.categoria.toUpperCase()
-        const arrayDate = this.entry.dataLancamento.split('/')
+        this.entry.entryType = this.entry.entryType.toUpperCase()
+        this.entry.entryDate = this.entry.entryDate.toUpperCase()
+        this.entry.category = this.entry.category.toUpperCase().replaceAll('.','_')
+        const arrayDate = this.entry.entryDate.split('/')
 
-        this.entry.dataLancamento = `${arrayDate[2]}-${arrayDate[1]}-${arrayDate[0]}`
-        this.entry.valor = new Intl.NumberFormat('pt', 
+        this.entry.entryDate = `${arrayDate[2]}-${arrayDate[1]}-${arrayDate[0]}`
+        this.entry.amount = new Intl.NumberFormat('pt', 
               { maximumFractionDigits: 2, minimumFractionDigits:2})
-            .format(this.entry.valor)
+            .format(this.entry.amount)
       }
 
     },

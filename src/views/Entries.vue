@@ -8,8 +8,9 @@ import { Modal } from "bootstrap"
 const entriesStore = useEntriesStore()
 const { entries } = storeToRefs(entriesStore)
 const {rows} = storeToRefs(entriesStore)
+const {entryData} = storeToRefs(entriesStore)
 
-const searchForm = { 'itemBusca': '', 'searchOnlyCurrentMonth': true }
+const searchForm = { 'searchItem': '', 'searchOnlyCurrentMonth': true }
 
 const modalState = reactive({
   modal: null
@@ -48,6 +49,7 @@ async function sendDelete(id){
 async function reload(){
   displayElementById('loadingReload')
   searchForm.itemBusca = ''
+  searchForm.searchOnlyCurrentMonth = document.getElementById('searchOnlyCurrentMonth').checked
   await entriesStore.search(searchForm)
   hideElementById('loadingReload')
 }
@@ -63,7 +65,20 @@ async function search(){
   
   hideElementById('searchTextRequired')
   displayElementById('loadingSearch')
-  searchForm.itemBusca = input.value
+  searchForm.searchItem = input.value
+  searchForm.searchOnlyCurrentMonth = document.getElementById('searchOnlyCurrentMonth').checked
+  await entriesStore.search(searchForm)
+  hideElementById('loadingSearch')
+}
+
+async function searchOnPagination(page) {
+  
+  searchForm.page = page
+  const input = document.getElementById('itemBusca')
+  
+  hideElementById('searchTextRequired')
+  displayElementById('loadingSearch')
+  searchForm.searchItem = input.value
   searchForm.searchOnlyCurrentMonth = document.getElementById('searchOnlyCurrentMonth').checked
   await entriesStore.search(searchForm)
   hideElementById('loadingSearch')
@@ -116,7 +131,7 @@ function hideElementById(id){
                 </button> 
               </div>
               <div class=" col-1">
-                  <button class="btn btn-success" id="recarregar" @click="reload()" >
+                  <button class="btn btn-success" id="btnReload" @click="reload()" >
                     {{ $t('reload') }}
                     <span id="loadingReload" style="display: none;" class="spinner-border spinner-border-sm mr-1"></span>
                   </button>
@@ -131,28 +146,31 @@ function hideElementById(id){
               </div>
               <div class="col-1"></div>
               <div class="col-1 mb-2">
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalRemoveAll">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" id="btnRemoveAll" data-bs-target="#modalRemoveAll">
                     {{ $t('btn.remove.all') }}
                 </button>
               </div>
             </div>
             <div class="row">
               <template v-if="entries.length">
-                <div class="table-responsive">
+                <div class="table-responsive" id="tabelaLancamentos">
                   <table class="table table-striped">
                     <thead>
-                      <tr >
+                      <!-- tr>
+                        <th colspan="6">{{ $t('total.records') }} : {{ entryData.totalRecords }}</th>
+                      </tr -->
+                      <tr>
                         <th v-for="row in rows" :key="row"><strong>{{ row }}</strong></th>
                         <th></th>
                       </tr>
                     </thead>
                     <tbody>
                         <tr v-for="entry in entries" :key="entry.id">
-                          <td>{{ entry.descricao }}</td>
-                          <td>{{ $t(entry.categoria) }}</td>
-                          <td>{{ $t(entry.tipoLancamento) }}</td>
-                          <td>{{ entry.dataLancamento }}</td>
-                          <td>{{ entry.valor }}</td>
+                          <td>{{ entry.description }}</td>
+                          <td>{{ $t(entry.category) }}</td>
+                          <td>{{ $t(entry.entryType) }}</td>
+                          <td>{{ entry.entryDate }}</td>
+                          <td>{{ entry.amount }}</td>
                           <td>
                             <router-link :to="`/entry/${entry.id}`" class="btn btn-sm btn-primary">{{ $t('edit') }}</router-link>
                             <a :id="`delete${entry.id}`" style="margin-left: 5px;" class="btn btn-sm btn-warning" @click="sendDelete(`${entry.id}`)">{{ $t('remove') }}
@@ -161,8 +179,37 @@ function hideElementById(id){
                           </td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                      <tr class="spend">
+                        <th>{{$t('total.spend')}}</th>
+                        <th colspan="5">{{entryData.totalSpend}}</th>
+                      </tr>
+                      <tr class="earnings">
+                        <th>{{ $t('total.earnings') }}</th>
+                        <th colspan="5">{{ entryData.totalEarnings }}</th>
+                      </tr>
+                      <tr class="spend">
+                        <th>{{ $t('grand.total.expenses') }}</th>
+                        <th colspan="5">{{ entryData.grandTotalExpenses }}</th>
+                      </tr>
+                      <tr class="winnings">
+                        <th>{{ $t('grand.total.winnings') }}</th>
+                        <th colspan="5">{{ entryData.grandTotalWinnings }}</th>
+                      </tr>
+                    </tfoot>
                   </table>
                 </div>
+
+                <div class="row">
+                  <nav>
+                    <ul class="pagination position-relative overflow-auto">
+                      <li v-for="p in entryData.pages" :key="p" class="page-item">
+                        <a class="page-link" href="#" @click="searchOnPagination(`${p}`)">{{ p }}</a>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+
               </template>
               <template v-else>
                 <table id="tabelaLancamentos" class="table table-sm table-striped table-hover table-bordered ui-empty-table">
@@ -193,7 +240,7 @@ function hideElementById(id){
                   {{ $t('sure.remove.all.entries') }}
               </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ $t('cancel') }}</button>
+                  <button type="button" class="btn btn-secondary" id="btnCancelRemoveAll" data-bs-dismiss="modal">{{ $t('cancel') }}</button>
                   <button type="button" class="btn btn-danger" id="btnYesRemoveAll"  @click="removeAll()">{{ $t('yes.sure') }}</button>
               </div>
           </div>

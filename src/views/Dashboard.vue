@@ -115,6 +115,7 @@ load()
             <div class="row">
               <div class="col-6">
                 <GChart
+                    id="tableChart"
                     :type="typeTable"
                     :data="tableData"
                     :options="optionsTable"
@@ -122,6 +123,7 @@ load()
               </div>
               <div class="col-6">
                   <GChart
+                      id="doughnutChart"
                       :type="type"
                       :data="doughnutData"
                       :options="options"

@@ -8,7 +8,8 @@ export const useFooterStore = defineStore({
   id: 'footer',
   state: () => ({
       env: '',
-      dbName: ''
+      dbName: '',
+      dbVendor: ''
     }),
     getters:{
       currentLocale: () =>{
@@ -37,6 +38,21 @@ export const useFooterStore = defineStore({
           const resp = await axios.get(`${baseUrl}/dbName`)
           if(resp.status == 200){
             this.dbName = resp.data
+          }else{
+            const alertStore = useAlertStore()
+            alertStore.error('An unexpected error occurred. Try again if the error persists, contact your administrator.')            
+          }
+        }catch(error){
+          const message = await error.response.data.message;
+          const alertStore = useAlertStore()
+          alertStore.error(message)
+        }
+    },
+      async getDbVendor() {
+        try{
+          const resp = await axios.get(`${baseUrl}/dbVendor`)
+          if(resp.status == 200){
+            this.dbVendor = resp.data
           }else{
             const alertStore = useAlertStore()
             alertStore.error('An unexpected error occurred. Try again if the error persists, contact your administrator.')            

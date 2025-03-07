@@ -32,7 +32,7 @@
   "phone.internet":"Phone & Internet",
   "car": "Car",
   "loan": "Loan",
-  "investiments": "Investiments",
+  "investments": "Investments",
   "clothing": "Clothing",
   "other": "Other",
   "entry.amount.required": "Amount is required",
@@ -59,5 +59,17 @@
   "dashboard":"Dashboard",
   "leonides.fernando.lab": "Leonides Fernando's Lab",
   "running.env": "Running in <small style='font-weight: bold;'>{environment}</small> environment",
-  "database.env": " on database: <small style='font-weight: bold;'>{databaseName}</small>"
+  "database.env": " on database: <small style='font-weight: bold;'>{databaseName}</small>",
+  "database.vendor": " on <small style='font-weight: bold;'>{databaseVendor}</small>",
+  "user.registered.successfully": "User registered successfully!",
+  "user.signed.out": "You've been signed out!",
+  "username.taken": "Username is already taken!",
+  "email.taken": "Email is already in use!",
+  "total.spend": "Total spend",
+  "total.earnings": "Total earnings",
+  "grand.total.winnings": "Grand total winnings",
+  "grand.total.expenses": "Grand total expenses",
+  "total.records":"Total records",
+  "previous": "Previous",
+  "next": "Next"
 }

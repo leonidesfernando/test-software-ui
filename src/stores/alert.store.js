@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-const timeout = 4000
+const timeout = 5000
 
 export const useAlertStore = defineStore({
     id: 'alert',

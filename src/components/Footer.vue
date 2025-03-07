@@ -8,11 +8,13 @@ const footerStore = useFooterStore()
 
 const { env } = storeToRefs(footerStore)
 const { dbName } = storeToRefs(footerStore)
+const { dbVendor } = storeToRefs(footerStore)
 
 
 async function loadFooterData(){
     footerStore.getEnv()
     footerStore.getDbName()
+    footerStore.getDbVendor()
 }
 
 loadFooterData()
@@ -24,7 +26,8 @@ loadFooterData()
       <div class="text-center text-muted">
           <h6 style="font-size: 0.71rem">
             <small v-html="$t('running.env', {environment: env})"></small>
-            <small v-html="$t('database.env', {databaseName: dbName})"></small>
+            <small v-html="$t('database.vendor', {databaseVendor: dbVendor})"></small>
+            <small v-html="$t('database.env', {databaseVendor: dbVendor},{databaseName: dbName})"></small>
           </h6>
       </div>
 </template>

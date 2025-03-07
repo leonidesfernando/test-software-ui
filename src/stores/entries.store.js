@@ -6,8 +6,12 @@ import { useAuthStore } from '@/stores'
 import { TOKEN } from '@/utils/Constants'
 import axios from 'axios'
 import {i18n} from '@/locale/i18n'
+import { decrypt } from '@/utils/Utils'
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/api/entries`
+
+const baseSecUrl = `${import.meta.env.VITE_API_URL}/api/sec/entries`
+
 
 export const useEntriesStore = defineStore({
   id: 'entries',
@@ -25,7 +29,8 @@ export const useEntriesStore = defineStore({
       async search(searchForm) {
         try{
           const resp = await axios.post(
-            `${baseUrl}/search`, 
+            //`${baseUrl}/search`, 
+            `${baseSecUrl}/search`, 
             searchForm,
             {
               headers: {
@@ -34,15 +39,22 @@ export const useEntriesStore = defineStore({
             }
           )
           if(resp.status == 200){
-            
-            this.entries = resp.data.lancamentos
-            const {lancamentos, ... myData} = resp.data
+
+            const data = decrypt(resp.data.data)
+
+            this.entries = data.entries
+            const {entries, ... myData} = data
             this.entryData = myData
+
+            /*this.entries = decrypt(resp.data.entries)
+            const {entries, ... myData} = resp.data
+            this.entryData = myData*/
           }else{
             const alertStore = useAlertStore()
             alertStore.error('An unexpected error occurred. Try again if the error persists, contact your administrator.')            
           }
         }catch(error){
+          console.log(error)
           if(error.response.status == 401){
             const authStore = useAuthStore()
             await authStore.logout()

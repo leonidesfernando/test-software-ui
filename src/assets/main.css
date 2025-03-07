@@ -34,3 +34,18 @@ a,
   }
 }
 */
+
+.spend{
+  color: rgba(160, 7, 7, 0.842);
+  font-weight: bold;
+}
+
+.earnings{
+  color: green;
+  font-weight: bold;
+}
+
+.winnings{
+  color:rgb(52, 52, 202);
+  font-weight: bold;
+}
