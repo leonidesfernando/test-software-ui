@@ -4,30 +4,46 @@ import { storeToRefs } from 'pinia'
 import { useEntriesStore } from '@/stores'
 import { reactive, onMounted } from 'vue'
 import { Modal } from "bootstrap"
+import { ref, computed } from "vue";
+
 
 const entriesStore = useEntriesStore()
 const { entries } = storeToRefs(entriesStore)
 const {rows} = storeToRefs(entriesStore)
 const {entryData} = storeToRefs(entriesStore)
+//const textRemoveAllSystem = storeToRefs(entriesStore)
+const textRemoveAllSystem = ref("delete")
+const userTextRemoveAll = ref("")
+const inputRef = ref(null)
 
 const searchForm = { 'searchItem': '', 'searchOnlyCurrentMonth': true }
 
-const modalState = reactive({
-  modal: null
-})
+
+//    const isMatchToRemoveAll = computed(() => userTextRemoveAll.value === textRemoveAllSystem.value);
+
+const isTextValid = computed(() => userTextRemoveAll.value === textRemoveAllSystem.value);
+
 
 onMounted(() => {
-  modalState.modal = new Modal('#modalRemoveAll', {})
+  let modalElement =  document.getElementById("modalRemoveAll");
   
   document.getElementById('searchOnlyCurrentMonth').checked = true
   document.getElementById('itemBusca').focus()
+
+  modalElement.addEventListener("shown.bs.modal", () => {
+    setTimeout(() => {
+      inputRef.value?.focus();
+    }, 20); // Delay ensures Bootstrap fully renders before focus
+  });
+
+  
   reload()
 })
+
 
 const onPressEnter = () => {
   search()
 };
-
 
 
 async function newEntry(){
@@ -35,9 +51,16 @@ async function newEntry(){
 }
 
 async function removeAll() {
-  await entriesStore.removeAll()
-  modalState.modal.hide()
-  await reload()
+  const textDeleteAll = document.getElementById('textDeleteAll').value;
+  alert(textDeleteAll)
+  //await entriesStore.removeAll()
+  //------------/modalState.modal.hide()
+  //await reload()
+}
+
+const onKeyUpDeleteAll = (event) => {
+  //alert(event.key)
+
 }
 
 async function sendDelete(id){
@@ -237,11 +260,23 @@ function hideElementById(id){
                   <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('cancel')"></button>
               </div>
               <div class="modal-body">
-                  {{ $t('sure.remove.all.entries') }}
+                  <p class="fs-5">{{ $t('sure.remove.all.entries') }}</p>
+
+                <div class="form-floating">
+                  <!-- input type="text" :placeholder="$t('search.description.category.type')" id="itemBusca" class="form-control" -->
+                  <input type="text" ref="inputRef" @keyup="onKeyUpDeleteAll" class="form-control" id="textDeleteAll" 
+                   placeholder="Type TEXT to confirm"
+                  v-model="userTextRemoveAll" />
+                  <label for="textDeleteAll">Type the text to remove all</label>
+                </div>
               </div>
+
+
+
               <div class="modal-footer">
+                  <!-- button type="button" class="btn btn-secondary" id="btnCancelRemoveAll" data-bs-dismiss="modal">{{ $t('cancel') }}</button -->
                   <button type="button" class="btn btn-secondary" id="btnCancelRemoveAll" data-bs-dismiss="modal">{{ $t('cancel') }}</button>
-                  <button type="button" class="btn btn-danger" id="btnYesRemoveAll"  @click="removeAll()">{{ $t('yes.sure') }}</button>
+                  <button type="button" class="btn btn-danger" id="btnYesRemoveAll"  @click="removeAll()" :disabled="!isTextValid">{{ $t('yes.sure') }}</button>
               </div>
           </div>
       </div>

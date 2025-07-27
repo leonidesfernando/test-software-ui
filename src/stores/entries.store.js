@@ -18,7 +18,8 @@ export const useEntriesStore = defineStore({
   state: () => ({
       token: localStorage.getItem(TOKEN),
       entryData: {},
-      entries: {}
+      entries: {},
+      textRemoveAllSystem: ''
     }),
     getters:{
       rows: () =>{
