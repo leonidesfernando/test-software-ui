@@ -71,5 +71,7 @@
   "grand.total.expenses": "Grand total expenses",
   "total.records":"Total records",
   "previous": "Previous",
-  "next": "Next"
+  "next": "Next",
+  "actions.delete": "remove all",
+  "actions.deleteAllPrompt": "Type the text {deleteWord} to remove all"
 }
