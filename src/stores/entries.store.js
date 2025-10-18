@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 import { router } from '@/router'
 import { useAlertStore } from '@/stores'
 import { useAuthStore } from '@/stores'
-import { TOKEN } from '@/utils/Constants'
+import { TOKEN, USER_ID } from '@/utils/Constants'
 import axios from 'axios'
 import {i18n} from '@/locale/i18n'
 import { decrypt } from '@/utils/Utils'
@@ -29,6 +29,7 @@ export const useEntriesStore = defineStore({
     actions: {
       async search(searchForm) {
         try{
+          searchForm.userId = localStorage.getItem(USER_ID)
           const resp = await axios.post(
             //`${baseUrl}/search`, 
             `${baseSecUrl}/search`, 
@@ -68,13 +69,15 @@ export const useEntriesStore = defineStore({
     },
     async removeAll(){
       const alertStore = useAlertStore()
+      const user = {id: localStorage.getItem(USER_ID)}
       try{
         const resp = await axios.delete(
           `${baseUrl}/removeAll`, 
           {
             headers: {
               'Authorization': 'Bearer ' + localStorage.getItem(TOKEN)
-            }
+            },
+            data: user
           }
         )
         if(resp.status == 200){

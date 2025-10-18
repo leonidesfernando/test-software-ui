@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 
 import { router } from '@/router';
 import { useAlertStore } from '@/stores';
-import { TOKEN } from '@/utils/Constants';
+import { TOKEN, USER_ID } from '@/utils/Constants';
 import axios from "axios"
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/api/auth`;
@@ -26,7 +26,9 @@ export const useAuthStore = defineStore({
           const resp = await axios.post(`${baseUrl}/signin`, body)
           if(resp.status == 200){
             this.token = await resp.data.token
+            const userId = await resp.data.id
             localStorage.setItem(TOKEN, this.token)
+            localStorage.setItem(USER_ID, userId)
             // redirect to previous url or default to home page
             this.token = localStorage.getItem(TOKEN)
             router.push('/');
@@ -45,6 +47,7 @@ export const useAuthStore = defineStore({
     async logout(){
       this.token = null;
       localStorage.removeItem(TOKEN);
+      localStorage.removeItem(USER_ID);
       await router.push('/login');
     },
     async home() {

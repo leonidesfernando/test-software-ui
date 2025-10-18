@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 
 import { router } from '@/router'
 import { useAlertStore } from '@/stores'
-import { TOKEN } from '@/utils/Constants'
+import { TOKEN,USER_ID } from '@/utils/Constants'
 import axios from 'axios'
 import {i18n} from '@/locale/i18n'
 
@@ -18,7 +18,8 @@ export const useEntryStore = defineStore({
               "amount": 0,
               "description": "",
               "entryDate": "",
-              "entryType": "EXPENSE"
+              "entryType": "EXPENSE",
+              "userId": 0
             }
     }),
     getters:{
@@ -50,11 +51,13 @@ export const useEntryStore = defineStore({
                 "amount": 0,
                 "description": "",
                 "entryDate": "",
-                "entryType": "EXPENSE"
+                "entryType": "EXPENSE",
+                "userId": 0
               }
       },
       async add() {
         const alertStore = useAlertStore()
+        this.entry.userId = localStorage.getItem(USER_ID)
         try{
           const resp = await axios.post(
             `${baseUrl}/add`, 

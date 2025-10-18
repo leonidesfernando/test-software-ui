@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia'
 import { useEntriesStore } from '@/stores'
 //import { reactive, onMounted } from 'vue'
 import { onMounted } from 'vue'
-//import { Modal } from "bootstrap"
+import { Modal } from "bootstrap"
 import { ref, computed } from "vue";
 
 import { i18n } from '@/locale/i18n.js'
@@ -66,7 +66,8 @@ async function sendDelete(id){
 
 async function reload(){
   displayElementById('loadingReload')
-  searchForm.itemBusca = ''
+  document.getElementById('itemBusca').value = ''
+  searchForm.searchItem = ''
   searchForm.searchOnlyCurrentMonth = document.getElementById('searchOnlyCurrentMonth').checked
   await entriesStore.search(searchForm)
   hideElementById('loadingReload')
