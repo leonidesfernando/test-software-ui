@@ -31,7 +31,7 @@ function setLocaleBR(ctx) {
         </ul>
       </div>
       <Alert />
-      <div class="navbar-text" style="padding-right: 20px;">
+      <div class="navbar-text" style="padding-right: 5%;text-align: right; ">
         <div style="display: flex;">
           
           <input type="radio" name="langOptions" class="form-check-input"  @click="setLocaleBR(this)"
@@ -41,7 +41,11 @@ function setLocaleBR(ctx) {
           <input type="radio" name="langOptions" class="form-check-input" @click="setLocaleEn(this)"
             style="background-image: url('./src/assets/usa-circle.png'); height: 28px; width: 28px;margin-left: 5px;" id="EN" autocomplete="off" checked/>
 
-          <span style="padding-left: 15px;">
+          <span style="padding-left: 15px; text-align: right;">
+            <span style="float: left;font-weight: bold;">
+              <span qaData="nameUser" style="font-weight: bold;">{{ authStore.getUser() }}</span>
+              <span style="margin: 4px;">|</span>
+            </span>
             <button id="logout" @click="authStore.logout()" class="btn btn-link nav-item nav-link">{{ $t('logout') }}</button>
           </span>
         </div>

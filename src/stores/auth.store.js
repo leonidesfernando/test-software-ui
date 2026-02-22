@@ -12,11 +12,15 @@ export const useAuthStore = defineStore({
   id: 'auth',
   state: () => ({
       // initialize state from local storage to enable user to stay logged in
-      token: localStorage.getItem(TOKEN)
+      token: localStorage.getItem(TOKEN),
+      user: ''
   }),
     actions: {
       getToken(){
         return this.token
+      },
+      getUser(){
+        return this.user
       },
       async login(username, password) {
         const alertStore = useAlertStore()
@@ -26,6 +30,7 @@ export const useAuthStore = defineStore({
           const resp = await axios.post(`${baseUrl}/signin`, body)
           if(resp.status == 200){
             this.token = await resp.data.token
+            this.user = resp?.data?.name ?? "No name";
             const userId = await resp.data.id
             localStorage.setItem(TOKEN, this.token)
             localStorage.setItem(USER_ID, userId)

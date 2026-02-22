@@ -47,6 +47,7 @@
   "search.description.category.type":"Search by description, category or  entry type",
   "search.only.current.month": "Search only on currency month",
   "search": "Search",
+  "export": "Export",
   "reload":"Reload",
   "edit":"Edit",
   "remove":"Remove",

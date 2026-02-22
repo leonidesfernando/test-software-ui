@@ -6,7 +6,7 @@ import { useAuthStore } from '@/stores'
 import { TOKEN, USER_ID } from '@/utils/Constants'
 import axios from 'axios'
 import {i18n} from '@/locale/i18n'
-import { decrypt } from '@/utils/Utils'
+import { decrypt, getFilenameFromContentDisposition } from '@/utils/Utils'
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/api/entries`
 
@@ -51,6 +51,52 @@ export const useEntriesStore = defineStore({
             /*this.entries = decrypt(resp.data.entries)
             const {entries, ... myData} = resp.data
             this.entryData = myData*/
+          }else{
+            const alertStore = useAlertStore()
+            alertStore.error('An unexpected error occurred. Try again if the error persists, contact your administrator.')            
+          }
+        }catch(error){
+          console.log(error)
+          if(error.response.status == 401){
+            const authStore = useAuthStore()
+            await authStore.logout()
+          }else{
+            const message = await error.response.data.message;
+            const alertStore = useAlertStore()
+            alertStore.error(message)
+          }
+        }
+    },
+    async exportExcel(searchForm){
+        try{
+          searchForm.userId = localStorage.getItem(USER_ID)
+          const resp = await axios.post(
+            `${baseUrl}/export`, 
+            //`${baseSecUrl}/search`, 
+            searchForm,
+            {
+              responseType: 'arraybuffer',
+              headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem(TOKEN)
+              }
+            }
+          )
+          if(resp.status == 200){
+            // Create a Blob from the response
+            const blob = new Blob([resp.data], {
+                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+              });
+              const url = window.URL.createObjectURL(blob);
+            // Create a temporary link element
+              const link = document.createElement('a');
+              link.href = url;
+              const filename = getFilenameFromContentDisposition(resp.headers['content-disposition']) || 'report.xlsx';
+              link.setAttribute('download', filename);
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              window.URL.revokeObjectURL(url);
+
           }else{
             const alertStore = useAlertStore()
             alertStore.error('An unexpected error occurred. Try again if the error persists, contact your administrator.')            

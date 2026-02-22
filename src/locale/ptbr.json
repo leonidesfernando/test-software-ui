@@ -47,6 +47,7 @@
   "search.description.category.type":"Busque por descrição, categoria ou tipo lançamento",
   "search.only.current.month": "Buscar apenas no mês corrente",
   "search": "Buscar",
+  "export": "Exportar",
   "reload":"Recarregar",
   "edit":"Editar",
   "remove":"Remover",

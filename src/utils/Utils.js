@@ -15,3 +15,29 @@ export function decrypt(data){
 
   return  JSON.parse(decodedString)
 }
+
+
+export function getFilenameFromContentDisposition(header) {
+  if (!header) return null;
+
+  const match = header.match(/filename\*?=([^;]+)/i);
+  if (!match) return null;
+
+  let filename = match[1].trim();
+
+  // Remove quotes if present
+  if (filename.startsWith('"') && filename.endsWith('"')) {
+    filename = filename.slice(1, -1);
+  }
+
+  // Decode UTF-8 filenames (filename*)
+  if (header.includes("UTF-8''")) {
+    try {
+      filename = decodeURIComponent(filename);
+    } catch {
+      // ignore
+    }
+  }
+
+  return filename || null;
+}
